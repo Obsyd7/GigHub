@@ -34,13 +34,5 @@ namespace GigHub.Controllers.Api
 
             return Ok();
         }
-
-        [HttpPost]
-        public IHttpActionResult Update(int id)
-        {
-
-
-            return Ok();
-        }
     }
 }
