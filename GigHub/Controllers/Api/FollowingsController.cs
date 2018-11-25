@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using System.Web.Http;
-using GigHub.Dtos;
+﻿using GigHub.Dtos;
 using GigHub.Models;
 using Microsoft.AspNet.Identity;
+using System.Linq;
+using System.Web.Http;
 
 namespace GigHub.Controllers.Api
 {
@@ -30,6 +30,20 @@ namespace GigHub.Controllers.Api
                 FolloweeId = dto.FolloweeId
             };
             _context.Followings.Add(following);
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
+        [HttpDelete]
+        public IHttpActionResult Unfollow(string artistId)
+        {
+            var userId = User.Identity.GetUserId();
+
+            var following = _context.Followings
+                .Single(f => f.FollowerId == userId && f.FolloweeId == artistId);
+
+            _context.Followings.Remove(following);
             _context.SaveChanges();
 
             return Ok();
