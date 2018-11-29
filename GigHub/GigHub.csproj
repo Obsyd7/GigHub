@@ -326,8 +326,10 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\App\app.js" />
+    <Content Include="Scripts\App\controllers\gigDetailsController.js" />
     <Content Include="Scripts\App\controllers\gigsController.js" />
     <Content Include="Scripts\App\services\attendanceService.js" />
+    <Content Include="Scripts\App\services\followingService.js" />
     <Content Include="Scripts\bootbox.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

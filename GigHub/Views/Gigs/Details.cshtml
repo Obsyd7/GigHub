@@ -26,40 +26,12 @@
 {
     <p>You are going to this event. </p>
 }
+
 @section scripts
 {
     <script>
         $(document).ready(function () {
-
-            $(".js-toggle-follow").click(function (e) {
-                var button = $(e.target);
-
-                if (button.hasClass("btn-default")) {
-                    $.post("/api/followings", { followeeId: button.attr("data-user-id") })
-                        .done(function () {
-                            button.text("Following");
-                            button.removeClass("btn-default");
-                            button.addClass("btn-info");
-                        })
-                        .fail(function () {
-                            alert("Something failed");
-                        });
-                } else {
-                    $.ajax({
-                        url: "/api/followings/" + button.attr("data-user-id"),
-                        method: "DELETE"
-                        })
-                        .done(function() {
-                            button.text("Follow");
-                            button.removeClass("btn-info");
-                            button.addClass("btn-default");
-                        })
-                        .fail(function() {
-                            alert("Something failed");
-                        });
-                }
-            });
-
+            GigDetailsController.init();
         });
     </script>
 }
