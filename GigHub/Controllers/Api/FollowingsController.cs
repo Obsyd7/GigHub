@@ -36,12 +36,12 @@ namespace GigHub.Controllers.Api
         }
 
         [HttpDelete]
-        public IHttpActionResult Unfollow(string artistId)
+        public IHttpActionResult Unfollow(string id)
         {
             var userId = User.Identity.GetUserId();
 
             var following = _context.Followings
-                .Single(f => f.FollowerId == userId && f.FolloweeId == artistId);
+                .SingleOrDefault(f => f.FollowerId == userId && f.FolloweeId == id);
 
             if (following == null)
                 return NotFound();
@@ -49,7 +49,7 @@ namespace GigHub.Controllers.Api
             _context.Followings.Remove(following);
             _context.SaveChanges();
 
-            return Ok(artistId);
+            return Ok(id);
         }
     }
 }

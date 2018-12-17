@@ -1,5 +1,4 @@
 ﻿var AttendanceService = function () {
-
     var createAttendance = function (gigId, done, fail) {
         $.post("/api/attendances", { gigId: gigId })
             .done(done)
@@ -19,4 +18,4 @@
         createAttendance: createAttendance,
         deleteAttendance: deleteAttendance
     }
-}
+}();

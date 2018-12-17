@@ -1,5 +1,4 @@
 ﻿var FollowingService = function () {
-
     var createFollowing = function (followeeId, done, fail) {
         $.post("/api/followings", { followeeId: followeeId })
             .done(done)
