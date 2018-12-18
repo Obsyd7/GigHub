@@ -20,5 +20,11 @@ namespace GigHub.Repositories
                 Where(a => a.AttendeeId == userId && a.Gig.DateTime > DateTime.Now)
                 .ToList();
         }
+
+        public bool GetAnyAttendance(int gigId, string userId)
+        {
+            return _context.Attendances
+                .Any(a => a.GigId == gigId && a.AttendeeId == userId);
+        }
     }
 }

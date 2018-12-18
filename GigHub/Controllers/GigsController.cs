@@ -15,11 +15,17 @@ namespace GigHub.Controllers
 
         private readonly GigRepository _gigRepository;
 
+        private readonly FollowingRepository _followingRepository;
+
+        private readonly GenreRepository _genreRepository;
+
         public GigsController()
         {
             _context = new ApplicationDbContext();
             _attendanceRepository = new AttendanceRepository(_context);
             _gigRepository = new GigRepository(_context);
+            _followingRepository = new FollowingRepository(_context);
+            _genreRepository = new GenreRepository(_context);
         }
 
         [HttpPost]
@@ -34,7 +40,7 @@ namespace GigHub.Controllers
             var viewModel = new GigFormViewModel
             {
                 Heading = "Create a Gig",
-                Genres = _context.Genres.ToList()
+                Genres = _genreRepository.GetAllGenres()
             };
             return View("GigForm", viewModel);
         }
@@ -73,7 +79,7 @@ namespace GigHub.Controllers
         {
             if (!ModelState.IsValid)
             {
-                viewModel.Genres = _context.Genres.ToList();
+                viewModel.Genres = _genreRepository.GetAllGenres();
                 return View("GigForm", viewModel);
             }
 
@@ -98,7 +104,7 @@ namespace GigHub.Controllers
         {
             if (!ModelState.IsValid)
             {
-                viewModel.Genres = _context.Genres.ToList();
+                viewModel.Genres = _genreRepository.GetAllGenres();
                 return View("GigForm", viewModel);
             }
 
@@ -149,11 +155,9 @@ namespace GigHub.Controllers
             {
                 var userId = User.Identity.GetUserId();
 
-                viewModel.IsAttending = _context.Attendances
-                    .Any(a => a.GigId == gig.Id && a.AttendeeId == userId);
+                viewModel.IsAttending = _attendanceRepository.GetAnyAttendance(viewModel.Gig.Id, userId);
 
-                viewModel.IsFollowing = _context.Followings
-                    .Any(f => f.FolloweeId == gig.ArtistId && f.FollowerId == userId);
+                viewModel.IsFollowing = _followingRepository.GetAnyFollowings(userId, viewModel.Gig.ArtistId);
             }
 
             return View("Details", viewModel);
