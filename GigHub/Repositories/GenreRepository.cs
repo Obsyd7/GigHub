@@ -17,5 +17,10 @@ namespace GigHub.Repositories
         {
             return _context.Genres.ToList();
         }
+
+        public void Add(Gig gig)
+        {
+            _context.Gigs.Add(gig);
+        }
     }
 }
