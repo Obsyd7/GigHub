@@ -2,8 +2,6 @@
 using GigHub.Repositories;
 using GigHub.ViewModels;
 using Microsoft.AspNet.Identity;
-using System;
-using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -43,14 +41,7 @@ namespace GigHub.Controllers
 
         public ActionResult Mine()
         {
-            var userId = User.Identity.GetUserId();
-
-            var gigs = _context.Gigs
-                .Where(a => a.ArtistId == userId &&
-                            a.DateTime > DateTime.Now &&
-                            !a.IsCanceled)
-                .Include(g => g.Genre)
-                .ToList();
+            var gigs = _gigRepository.GetUpcomingGigsArtist(User.Identity.GetUserId());
 
             return View(gigs);
         }
@@ -130,9 +121,7 @@ namespace GigHub.Controllers
         [Authorize]
         public ActionResult Edit(int id)
         {
-            var userId = User.Identity.GetUserId();
-
-            var gig = _context.Gigs.Single(g => g.Id == id && g.ArtistId == userId);
+            var gig = _gigRepository.GetGigToEdit(id, User.Identity.GetUserId());
 
             var viewModel = new GigFormViewModel
             {
@@ -149,10 +138,7 @@ namespace GigHub.Controllers
 
         public ActionResult Details(int id)
         {
-            var gig = _context.Gigs
-                .Include(g => g.Artist)
-                .Include(g => g.Genre)
-                .SingleOrDefault(g => g.Id == id);
+            var gig = _gigRepository.GetGigDetails(id);
 
             if (gig == null)
                 return HttpNotFound();
