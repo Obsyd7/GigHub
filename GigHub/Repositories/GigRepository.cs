@@ -47,7 +47,7 @@ namespace GigHub.Repositories
                 .SingleOrDefault(g => g.Id == gigId);
         }
 
-        public Gig GetGigToEdit(int gigId, string artistId)
+        public Gig GetGigToEdit(int gigId)
         {
             return _context.Gigs.Single(g => g.Id == gigId);
         }

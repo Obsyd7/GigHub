@@ -10,13 +10,9 @@ namespace GigHub.Controllers
     public class GigsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
         private readonly AttendanceRepository _attendanceRepository;
-
         private readonly GigRepository _gigRepository;
-
         private readonly FollowingRepository _followingRepository;
-
         private readonly GenreRepository _genreRepository;
 
         public GigsController()
@@ -127,13 +123,20 @@ namespace GigHub.Controllers
         [Authorize]
         public ActionResult Edit(int id)
         {
-            var gig = _gigRepository.GetGigToEdit(id, User.Identity.GetUserId());
+            var gig = _gigRepository.GetGigToEdit(id);
+
+            if (gig == null)
+                return HttpNotFound();
+
+            if (gig.ArtistId != User.Identity.GetUserId())
+                return new HttpUnauthorizedResult();
+
 
             var viewModel = new GigFormViewModel
             {
                 Id = gig.Id,
                 Heading = "Edit a Gig",
-                Genres = _context.Genres.ToList(),
+                Genres = _genreRepository.GetAllGenres(),
                 Date = gig.DateTime.ToString("d MMM yyyy"),
                 Time = gig.DateTime.ToString("HH:mm"),
                 Genre = gig.GenreId,
@@ -155,9 +158,9 @@ namespace GigHub.Controllers
             {
                 var userId = User.Identity.GetUserId();
 
-                viewModel.IsAttending = _attendanceRepository.GetAnyAttendance(viewModel.Gig.Id, userId);
+                viewModel.IsAttending = _attendanceRepository.GetAnyAttendance(gig.Id, userId);
 
-                viewModel.IsFollowing = _followingRepository.GetAnyFollowings(userId, viewModel.Gig.ArtistId);
+                viewModel.IsFollowing = _followingRepository.GetAnyFollowings(userId, gig.ArtistId);
             }
 
             return View("Details", viewModel);
