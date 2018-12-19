@@ -1,5 +1,5 @@
-﻿using GigHub.Core.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using GigHub.Core.Models;
 
 namespace GigHub.Core.Repositories
 {
@@ -10,7 +10,5 @@ namespace GigHub.Core.Repositories
         IEnumerable<Gig> GetUpcomingGigsArtist(string userId);
         Gig GetGigDetails(int gigId);
         Gig GetGigToEdit(int gigId);
-        IEnumerable<Gig> GetAllUpcomingGigs();
-        IEnumerable<Gig> GetAllUpcomingGigsQuery(string query, IEnumerable<Gig> upComingGigs);
     }
 }
