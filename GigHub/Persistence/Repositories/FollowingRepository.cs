@@ -14,18 +14,28 @@ namespace GigHub.Persistence.Repositories
             _context = context;
         }
 
-        public bool GetAnyFollowings(string userId, string artistId)
-        {
-            return _context.Followings
-                .Any(f => f.FolloweeId == artistId && f.FollowerId == userId);
-        }
-
         public List<ApplicationUser> GetFollowees(string userId)
         {
             return _context.Followings
                 .Where(a => a.FollowerId == userId)
                 .Select(c => c.Followee)
                 .ToList();
+        }
+
+        public Following GetFollowing(string followerId, string followeeId)
+        {
+            return _context.Followings
+                .SingleOrDefault(f => f.FolloweeId == followeeId && f.FollowerId == followerId);
+        }
+
+        public void Add(Following following)
+        {
+            _context.Followings.Add(following);
+        }
+
+        public void Remove(Following following)
+        {
+            _context.Followings.Remove(following);
         }
     }
 }
