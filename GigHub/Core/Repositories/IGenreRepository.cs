@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using GigHub.Core.Models;
+﻿using GigHub.Core.Models;
+using System.Collections.Generic;
 
 namespace GigHub.Core.Repositories
 {
     public interface IGenreRepository
     {
-        void Add(Gig gig);
-        List<Genre> GetAllGenres();
+        IEnumerable<Genre> GetGenres();
     }
 }

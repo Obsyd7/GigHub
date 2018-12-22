@@ -17,18 +17,19 @@ namespace GigHub.Controllers
 
         public ActionResult Index(string query = null)
         {
-            var upComingGigs = _unitOfWork.Gigs.GetAllUpComingGigs(query);
+            var upcomingGigs = _unitOfWork.Gigs.GetUpcomingGigs(query);
 
             var userId = User.Identity.GetUserId();
-
+            var attendances = _unitOfWork.Attendances.GetFutureAttendances(userId)
+                .ToLookup(a => a.GigId);
 
             var viewModel = new GigsViewModel
             {
-                UpcomingGigs = upComingGigs,
+                UpcomingGigs = upcomingGigs,
                 ShowActions = User.Identity.IsAuthenticated,
                 Heading = "Upcoming Gigs",
                 SearchTerm = query,
-                Attendances = _unitOfWork.Attendances.GetFutureAttendances(userId).ToLookup(a => a.GigId)
+                Attendances = attendances
             };
 
             return View("Gigs", viewModel);

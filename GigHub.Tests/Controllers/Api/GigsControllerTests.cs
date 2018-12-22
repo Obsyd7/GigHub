@@ -74,5 +74,6 @@ namespace GigHub.Tests.Controllers.Api
 
             result.Should().BeOfType<OkResult>();
         }
+
     }
 }

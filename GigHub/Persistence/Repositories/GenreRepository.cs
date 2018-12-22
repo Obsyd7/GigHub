@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using GigHub.Core.Models;
+﻿using GigHub.Core.Models;
 using GigHub.Core.Repositories;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GigHub.Persistence.Repositories
 {
@@ -14,14 +14,9 @@ namespace GigHub.Persistence.Repositories
             _context = context;
         }
 
-        public List<Genre> GetAllGenres()
+        public IEnumerable<Genre> GetGenres()
         {
             return _context.Genres.ToList();
-        }
-
-        public void Add(Gig gig)
-        {
-            _context.Gigs.Add(gig);
         }
     }
 }
