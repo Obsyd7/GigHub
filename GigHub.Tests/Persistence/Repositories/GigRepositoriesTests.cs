@@ -8,7 +8,7 @@ using Moq;
 using System;
 using System.Data.Entity;
 
-namespace GigHub.Tests.Persistance.Repositories
+namespace GigHub.Tests.Persistence.Repositories
 {
     [TestClass]
     public class GigRepositoriesTests
@@ -95,7 +95,27 @@ namespace GigHub.Tests.Persistance.Repositories
         [TestMethod]
         public void GetGigsUserAttending_AttendanceForADifferentUser_ShouldNotBeReturned()
         {
+            var gig = new Gig() { DateTime = DateTime.Now.AddDays(1) };
+            var attendance = new Attendance { Gig = gig, AttendeeId = "1" };
 
+            _mockAttendances.SetSource(new[] { attendance });
+
+            var gigs = _repository.GetGigsUserAttending(attendance.AttendeeId + "-");
+
+            gigs.Should().BeEmpty();
+        }
+
+        [TestMethod]
+        public void GetGigsUserAttending_UpcomingGigUserAttending_ShouldBeReturned()
+        {
+            var gig = new Gig() { DateTime = DateTime.Now.AddDays(1) };
+            var attendance = new Attendance { Gig = gig, AttendeeId = "1" };
+
+            _mockAttendances.SetSource(new[] { attendance });
+
+            var gigs = _repository.GetGigsUserAttending(attendance.AttendeeId);
+
+            gigs.Should().Contain(gig);
         }
     }
 }
