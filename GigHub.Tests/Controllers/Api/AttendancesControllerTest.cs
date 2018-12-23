@@ -14,17 +14,17 @@ namespace GigHub.Tests.Controllers.Api
     [TestClass]
     public class AttendancesControllerTests
     {
-        private readonly AttendancesController _controller;
-        private readonly Mock<IAttendanceRepository> _mockRepository;
-        private readonly string _userId;
+        private AttendancesController _controller;
+        private Mock<IAttendanceRepository> _mockRepository;
+        private string _userId;
 
-        public AttendancesControllerTests()
+        [TestInitialize]
+        public void TestInitialize()
         {
             _mockRepository = new Mock<IAttendanceRepository>();
 
             var mockUoW = new Mock<IUnitOfWork>();
-
-            mockUoW.SetupGet(m => m.Attendances).Returns(_mockRepository.Object);
+            mockUoW.SetupGet(u => u.Attendances).Returns(_mockRepository.Object);
 
             _controller = new AttendancesController(mockUoW.Object);
             _userId = "1";
@@ -37,16 +37,15 @@ namespace GigHub.Tests.Controllers.Api
             var attendance = new Attendance();
             _mockRepository.Setup(r => r.GetAttendance(1, _userId)).Returns(attendance);
 
-            var result = _controller.Attend(new AttendanceDto() { GigId = 1 });
+            var result = _controller.Attend(new AttendanceDto { GigId = 1 });
 
             result.Should().BeOfType<BadRequestErrorMessageResult>();
-
         }
 
         [TestMethod]
         public void Attend_ValidRequest_ShouldReturnOk()
         {
-            var result = _controller.Attend(new AttendanceDto() { GigId = 1 });
+            var result = _controller.Attend(new AttendanceDto { GigId = 1 });
 
             result.Should().BeOfType<OkResult>();
         }
@@ -54,7 +53,8 @@ namespace GigHub.Tests.Controllers.Api
         [TestMethod]
         public void DeleteAttendance_NoAttendanceWithGivenIdExists_ShouldReturnNotFound()
         {
-            var result = _controller.DeleteAttendance(2);
+            var result = _controller.DeleteAttendance(1);
+
             result.Should().BeOfType<NotFoundResult>();
         }
 
@@ -62,12 +62,22 @@ namespace GigHub.Tests.Controllers.Api
         public void DeleteAttendance_ValidRequest_ShouldReturnOk()
         {
             var attendance = new Attendance();
-
             _mockRepository.Setup(r => r.GetAttendance(1, _userId)).Returns(attendance);
 
             var result = _controller.DeleteAttendance(1);
 
             result.Should().BeOfType<OkNegotiatedContentResult<int>>();
+        }
+
+        [TestMethod]
+        public void DeleteAttendance_ValidRequest_ShouldReturnTheIdOfDeletedAttendance()
+        {
+            var attendance = new Attendance();
+            _mockRepository.Setup(r => r.GetAttendance(1, _userId)).Returns(attendance);
+
+            var result = (OkNegotiatedContentResult<int>)_controller.DeleteAttendance(1);
+
+            result.Content.Should().Be(1);
         }
     }
 }
